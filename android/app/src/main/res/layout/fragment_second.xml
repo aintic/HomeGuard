@@ -10,7 +10,6 @@
         android:id="@+id/status_data"
         android:layout_width="56dp"
         android:layout_height="17dp"
-        android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/button_second"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
