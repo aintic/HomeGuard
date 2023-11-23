@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/DataDisplayFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.homeguard.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        android:id="@+id/DataDisplayFragment"
+        android:name="com.example.homeguard.DataDisplayFragment"
+        android:label="@string/data_display_fragment_label"
+        tools:layout="@layout/data_display_fragment">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_DataDisplay_to_DeviceControl"
+            app:destination="@id/DeviceControlFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.homeguard.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/DeviceControlFragment"
+        android:name="com.example.homeguard.DeviceControlFragment"
+        android:label="@string/device_control_fragment_label"
+        tools:layout="@layout/device_control_fragment">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_DeviceControl_to_DataDisplay"
+            app:destination="@id/DataDisplayFragment" />
     </fragment>
 </navigation>

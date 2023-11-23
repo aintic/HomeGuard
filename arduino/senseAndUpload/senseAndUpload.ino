@@ -1,9 +1,12 @@
-void setup() {
-  // put your setup code here, to run once:
+#include <WiFiManager.h>
 
+WiFiManager wifiManager;
+
+void setup() {
+  // setup password protected access point at 192.168.4.1
+  wifiManager.autoConnect("AutoConnectAP", "H0m3GuardSyst3m");
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  
 }
