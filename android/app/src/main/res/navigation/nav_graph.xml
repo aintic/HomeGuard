@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/DataDisplayFragment">
+    app:startDestination="@id/EnvironmentDataFragment">
 
     <fragment
-        android:id="@+id/DataDisplayFragment"
-        android:name="com.example.homeguard.DataDisplayFragment"
-        android:label="@string/data_display_fragment_label"
-        tools:layout="@layout/data_display_fragment">
+        android:id="@+id/EnvironmentDataFragment"
+        android:name="com.example.homeguard.EnvironmentDataFragment"
+        android:label="@string/environment_data_fragment_label"
+        tools:layout="@layout/environment_data_fragment">
 
         <action
-            android:id="@+id/action_DataDisplay_to_DeviceControl"
-            app:destination="@id/DeviceControlFragment" />
+            android:id="@+id/action_EnvironmentData_to_FloodData"
+            app:destination="@id/FloodDataFragment" />
     </fragment>
     <fragment
-        android:id="@+id/DeviceControlFragment"
-        android:name="com.example.homeguard.DeviceControlFragment"
-        android:label="@string/device_control_fragment_label"
-        tools:layout="@layout/device_control_fragment">
+        android:id="@+id/FloodDataFragment"
+        android:name="com.example.homeguard.FloodDataFragment"
+        android:label="@string/flood_data_fragment_label"
+        tools:layout="@layout/flood_data_fragment">
 
         <action
-            android:id="@+id/action_DeviceControl_to_DataDisplay"
-            app:destination="@id/DataDisplayFragment" />
+            android:id="@+id/action_FloodData_to_EnvironmentData"
+            app:destination="@id/EnvironmentDataFragment" />
     </fragment>
 </navigation>
