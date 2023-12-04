@@ -2,14 +2,15 @@
     <string name="app_name">HomeGuard</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="data_display_fragment_label">Home Environment Data</string>
-    <string name="device_control_fragment_label">Device Control</string>
+    <string name="environment_data_fragment_label">Temperature &amp; Humidity</string>
+    <string name="flood_data_fragment_label">Flooding</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
     <string name="temperature_label">Temperature</string>
     <string name="humidity_label">Humidity</string>
-    <string name="status_label">Device Status</string>
+    <string name="status_label">Status</string>
+    <string name="water_level_label">Water Level</string>
     <string name="hello_second_fragment">Arg: %1$s</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
