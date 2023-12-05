@@ -11,6 +11,11 @@
     <string name="humidity_label">Humidity</string>
     <string name="status_label">Status</string>
     <string name="water_level_label">Water Level</string>
+    <string name="temperature_default">0</string>
+    <string name="humidity_default">0</string>
+    <string name="status_default">Normal</string>
+    <string name="water_level_default">0</string>
+
     <string name="hello_second_fragment">Arg: %1$s</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
