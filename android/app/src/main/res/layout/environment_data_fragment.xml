@@ -6,6 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".EnvironmentDataFragment">
 
+    <com.jjoe64.graphview.helper.GraphViewXML
+        android:id="@+id/temperatureGraph"
+        android:layout_width="315dp"
+        android:layout_height="181dp"
+        android:title="Temperature Graph"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.287"
+        app:seriesColor="#FF5722"
+        app:seriesData="0=0;1=0;2=0;3=0;4=0;5=0;6=0;7=0;8=0"
+        app:seriesType="line" />
+
+    <com.jjoe64.graphview.helper.GraphViewXML
+        android:id="@+id/humidityGraph"
+        android:layout_width="315dp"
+        android:layout_height="180dp"
+        android:title="Humidity Graph"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.705"
+        app:seriesColor="#39B5EC"
+        app:seriesData="0=0;1=0;2=0;3=0;4=0;5=0;6=0;7=0;8=0"
+        app:seriesType="line" />
+
     <Button
         android:id="@+id/button_first"
         android:layout_width="wrap_content"
@@ -26,10 +55,11 @@
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintHorizontal_bias="0.833"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintVertical_bias="0.057"
+        tools:text="@string/humidity_default"/>
 
     <TextView
         android:id="@+id/humidity_label"
@@ -60,7 +90,8 @@
         app:layout_constraintHorizontal_bias="0.202"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057" />
+        app:layout_constraintVertical_bias="0.057"
+        tools:text="@string/temperature_default" />
 
     <TextView
         android:id="@+id/temperature_label"
@@ -76,5 +107,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.029" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

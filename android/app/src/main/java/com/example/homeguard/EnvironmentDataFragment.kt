@@ -1,18 +1,27 @@
 package com.example.homeguard
 
 import android.content.ContentValues
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.homeguard.data.EnvironmentData
 import com.example.homeguard.databinding.EnvironmentDataFragmentBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.series.DataPoint
+import com.jjoe64.graphview.series.LineGraphSeries
+import java.math.RoundingMode
+import java.util.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -24,6 +33,10 @@ class EnvironmentDataFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val envData: EnvironmentData
+        get() = mainViewModel.envData
+
     private val firebaseDB = FirebaseConnection()
     private val dataListener = object: ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -32,14 +45,34 @@ class EnvironmentDataFragment : Fragment() {
             val value = dataSnapshot.value
 
             if (value is Map<*, *>) {
-                val temp = value["temperature"]
-                val humidity = value["humidity"]
-                Log.d(ContentValues.TAG, "Temperature: $temp, Humidity: $humidity")
+                val temperature: Double = (value["temperatureC"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+                val humidity: Double = (value["humidity"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+
+                Log.d(ContentValues.TAG, "Temperature: $temperature, Humidity: $humidity")
+
                 val tempView: TextView? = view?.findViewById(R.id.temperature_data)
                 val humidView: TextView? = view?.findViewById(R.id.humidity_data)
+                val tempGraph: GraphView? = view?.findViewById(R.id.temperatureGraph)
+                val humidGraph: GraphView? = view?.findViewById(R.id.humidityGraph)
+
                 if (tempView != null && humidView != null) {
-                    tempView.text = "$temp"
+                    tempView.text = "$temperature"
                     humidView.text = "$humidity"
+
+                    envData.addData(temperature, humidity)
+
+                    tempGraph?.removeAllSeries()
+                    humidGraph?.removeAllSeries()
+
+                    val tempSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getTempDataPoints())
+                    tempSeries.setAnimated(true)
+                    tempSeries.color = Color.rgb(255, 87, 37)
+                    tempGraph?.addSeries(tempSeries)
+
+                    val humidSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getHumidityDataPoints())
+                    humidSeries.setAnimated(true)
+                    humidSeries.color = Color.rgb(57, 181, 236)
+                    humidGraph?.addSeries(humidSeries)
                 }
             }
         }
@@ -56,6 +89,7 @@ class EnvironmentDataFragment : Fragment() {
     ): View? {
 
         _binding = EnvironmentDataFragmentBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 

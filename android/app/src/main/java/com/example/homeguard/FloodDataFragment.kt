@@ -9,11 +9,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.homeguard.data.FloodData
 import com.example.homeguard.databinding.FloodDataFragmentBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import java.math.RoundingMode
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -26,6 +29,10 @@ class FloodDataFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val floodData: FloodData
+        get() = mainViewModel.floodData
+
     private val firebaseDB = FirebaseConnection()
     private val dataListener = object: ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -34,20 +41,27 @@ class FloodDataFragment : Fragment() {
             val value = dataSnapshot.value
 
             if (value is Map<*, *>) {
-                val waterLevel = value["waterLevel"]
+                val waterLevel: Double = (value["waterLevel"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
                 Log.d(ContentValues.TAG, "Water Level: $waterLevel")
-                val waterLevelDouble = waterLevel as? Double
+
                 val waterLevelView: TextView? = view?.findViewById(R.id.water_level_data)
                 val statusView: TextView? = view?.findViewById(R.id.status_data)
+
                 if (waterLevelView != null && statusView != null) {
+
                     waterLevelView.text = "$waterLevel"
-                    if (waterLevelDouble != null && waterLevelDouble < 0.3) {
+
+                    if (waterLevel.equals(0.0)) {
+                        Log.d(ContentValues.TAG, "Inside loop normal")
                         statusView.text = "Normal"
-                        statusView.setTextColor(Color.BLACK);
+                        statusView.setTextColor(Color.rgb(76, 175, 80));
+
                     }
                     else {
+                        floodData.addData(waterLevel, true)
+                        Log.d(ContentValues.TAG, "Inside loop alert")
                         statusView.text = "Alert"
-                        statusView.setTextColor(Color.RED);
+                        statusView.setTextColor(Color.rgb(233, 30, 99));
                     }
                 }
             }
@@ -66,7 +80,6 @@ class FloodDataFragment : Fragment() {
 
         _binding = FloodDataFragmentBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
