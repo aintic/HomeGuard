@@ -14,14 +14,14 @@ void setup() {
   waterValve.attach(SERVO_PIN);
   waterValve.write(0);
 
-  ESP_BT.begin("Main Water Valve Control"); //Name of Bluetooth Signal
+  ESP_BT.begin("Valve"); //Name of Bluetooth Signal
   Serial.println("Bluetooth Device is Ready to Pair");
 }
 
 void loop() {
   if (ESP_BT.available()) /*Check if we receive anything from Bluetooth*/ {
     incoming = ESP_BT.read(); //Read what we recevive 
-    Serial.print("Received:"); 
+    Serial.print("Received:");
     Serial.println(incoming);
 
     // signal to turn valve off

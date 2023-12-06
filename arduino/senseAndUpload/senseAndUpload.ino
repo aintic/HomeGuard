@@ -5,7 +5,6 @@
 #include "DHT.h"
 #include "FirebaseConnection.h"
 #include "pitches.h"
-#include "time.h"
 
 #define DHT_TYPE DHT11
 #define DHT_PIN 13
@@ -104,7 +103,7 @@ void fcsUploadCallback(CFS_UploadStatusInfo info)
 void sendSensorData() {
   if (Firebase.ready() && signupOK){  
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setDouble(&fbdo, "sensor/temperatureC", temperatureC)){
+    if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureC", temperatureC)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -115,7 +114,7 @@ void sendSensorData() {
     }
 
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setDouble(&fbdo, "sensor/temperatureF", temperatureF)){
+    if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureF", temperatureF)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -126,7 +125,7 @@ void sendSensorData() {
     }
 
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setDouble(&fbdo, "sensor/humidity", humidity)){
+    if (Firebase.RTDB.setFloat(&fbdo, "sensor/humidity", humidity)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -137,7 +136,7 @@ void sendSensorData() {
     }
 
         // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setDouble(&fbdo, "sensor/waterLevel", waterLevel)){
+    if (Firebase.RTDB.setFloat(&fbdo, "sensor/waterLevel", waterLevel)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -188,7 +187,7 @@ void sendEventData() {
 
 void sendSMS(String smsType) {
   FirebaseJson content;
-  String documentPath = "sms/" + String(smsCount);
+  String documentPath = "sms/";
   content.set("fields/to/stringValue", PHONE);
 
   if (smsType.equals("flood")) {
@@ -201,8 +200,7 @@ void sendSMS(String smsType) {
   String doc_path = "projects/";
   doc_path += PROJECT_ID;
   doc_path += ("/databases/(default)/documents/sms/" + String(smsCount));
-
-  smsCount++;
+  
   Serial.print("Create a document... ");
   if (Firebase.Firestore.createDocument(&fbdo, PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.raw()))
     Serial.printf("ok\n%s\n\n", fbdo.payload().c_str());
@@ -298,7 +296,10 @@ void loop() {
     floodNotification = true;
     playAlarm();
     sendEventData();
-    sendSMS("flood");
+    if (smsCount <= 2) {
+      sendSMS("flood");
+      smsCount++;
+    }
   }
   else if (waterLevel != 0 && statusNormal == false) {
     floodNotification = false;
@@ -309,7 +310,10 @@ void loop() {
     floodNotification = false;
     recoveredNotification = true;
     sendEventData();
-    sendSMS("recovered");
+    if (smsCount <= 2) {
+      sendSMS("recovered");
+      smsCount++;
+    }
   }
   else {
     statusNormal = true;
