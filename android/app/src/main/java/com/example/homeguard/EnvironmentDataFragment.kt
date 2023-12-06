@@ -37,7 +37,7 @@ class EnvironmentDataFragment : Fragment() {
     private val envData: EnvironmentData
         get() = mainViewModel.envData
 
-    private val firebaseDB = FirebaseConnection()
+    private val firebaseDB = FirebaseConnection("sensor")
     private val dataListener = object: ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             // This method is called once with the initial value and again

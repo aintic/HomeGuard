@@ -7,4 +7,13 @@ import com.example.homeguard.data.FloodData
 class MainViewModel : ViewModel() {
     var envData: EnvironmentData = EnvironmentData()
     var floodData: FloodData = FloodData()
+    var buzzerOff: Boolean = false
+
+    fun getBuzzerState(): Boolean {
+        return buzzerOff
+    }
+
+    fun toggleBuzzerState() {
+        buzzerOff = !buzzerOff
+    }
 }

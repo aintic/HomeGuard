@@ -6,16 +6,14 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.homeguard.data.EnvironmentData
 import com.example.homeguard.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
-import com.jjoe64.graphview.series.DataPoint
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +39,17 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            val firebaseDB = FirebaseConnection("app")
+
+            mainViewModel.toggleBuzzerState()
+            var buzzerState = "on"
+            if (mainViewModel.getBuzzerState()) {
+                buzzerState = "off"
+            }
+
+            firebaseDB.getDatabaseRef().child("buzzerOff").setValue(mainViewModel.getBuzzerState())
+
+            Snackbar.make(view, "Buzzer $buzzerState.", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
 
