@@ -1,3 +1,6 @@
+# Arduino headers
+FirebaseConnection.h
+
 # Gradle files
 .gradle/
 build/

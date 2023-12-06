@@ -22,16 +22,6 @@
 //Provide the RTDB payload printing info and other helper functions.
 #include "addons/RTDBHelper.h"
 
-// notes in the melody:
-int melody[] = {
-  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
-};
-
-// note durations: 4 = quarter note, 8 = eighth note, etc.:
-int noteDurations[] = {
-  4, 8, 8, 4, 4, 4, 4, 4
-};
-
 WiFiManager wifiManager;
 DHT dht(DHT_PIN, DHT_TYPE);
 
@@ -67,38 +57,10 @@ void signalLeds() {
 }
 
 void playAlarm() {
-  // iterate over the notes of the melody:
-  // for (int thisNote = 0; thisNote < 8; thisNote++) {
-  //   // to calculate the note duration, take one second divided by the note type.
-  //   //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-  //   int noteDuration = 1000 / noteDurations[thisNote];
-  //   tone(BUZZER_PIN, melody[thisNote], noteDuration);
-
-  //   // to distinguish the notes, set a minimum time between them.
-  //   // the note's duration + 30% seems to work well:
-  //   int pauseBetweenNotes = noteDuration * 1.30;
-  //   delay(pauseBetweenNotes);
-  //   // stop the tone playing:
-  //   noTone(BUZZER_PIN);
-  // }
-  // myTone(BUZZER_PIN);
-  // delay(20);
-  // myNoTone(BUZZER_PIN);
   tone(BUZZER_PIN, NOTE_E3, 1000);
   delay(10);
   noTone(BUZZER_PIN);
 }
-
-// void myTone( int pin)
-// {
-//   ledcAttachPin(pin, 0);             // pin, channel
-//   ledcWriteNote(0, NOTE_F, 4);    // channel, frequency, octave
-// }
-
-// void myNoTone( int pin)
-// {
-//   ledcDetachPin(pin);
-// }
 
 float readFromUltrasonic() {
   // Clears the trigPin
@@ -140,11 +102,9 @@ void fcsUploadCallback(CFS_UploadStatusInfo info)
 }
 
 void sendSensorData() {
-  if (Firebase.ready() && signupOK){
-    // && (millis() - sendDataPrevMillis > 3000 || sendDataPrevMillis == 0)
-    // sendDataPrevMillis = millis();    
+  if (Firebase.ready() && signupOK){  
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureC", temperatureC)){
+    if (Firebase.RTDB.setDouble(&fbdo, "sensor/temperatureC", temperatureC)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -155,7 +115,7 @@ void sendSensorData() {
     }
 
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureF", temperatureF)){
+    if (Firebase.RTDB.setDouble(&fbdo, "sensor/temperatureF", temperatureF)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -166,7 +126,7 @@ void sendSensorData() {
     }
 
     // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setFloat(&fbdo, "sensor/humidity", humidity)){
+    if (Firebase.RTDB.setDouble(&fbdo, "sensor/humidity", humidity)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -177,7 +137,7 @@ void sendSensorData() {
     }
 
         // Write a Float number on the database path sensor
-    if (Firebase.RTDB.setFloat(&fbdo, "sensor/waterLevel", waterLevel)){
+    if (Firebase.RTDB.setDouble(&fbdo, "sensor/waterLevel", waterLevel)){
       Serial.println("PASSED");
       Serial.println("PATH: " + fbdo.dataPath());
       Serial.println("TYPE: " + fbdo.dataType());
@@ -226,47 +186,28 @@ void sendEventData() {
   }
 }
 
-void sendSMS() {
+void sendSMS(String smsType) {
   FirebaseJson content;
   String documentPath = "sms/" + String(smsCount);
   content.set("fields/to/stringValue", PHONE);
-  content.set("fields/body/stringValue", "Water detected in basement on 03/12/2023 2:27pm EST!");
+
+  if (smsType.equals("flood")) {
+    content.set("fields/body/stringValue", "Status Alert: Water detected in basement! Water level is " + String(waterLevel) + ".");
+  }
+  else if (smsType.equals("recovered")) {
+    content.set("fields/body/stringValue", "Status Normal: Water no longer detected in basement!");
+  }
+  
   String doc_path = "projects/";
   doc_path += PROJECT_ID;
   doc_path += ("/databases/(default)/documents/sms/" + String(smsCount));
-  // reference
-  //content.set("fields/myRef/referenceValue", doc_path.c_str());
+
   smsCount++;
   Serial.print("Create a document... ");
   if (Firebase.Firestore.createDocument(&fbdo, PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.raw()))
     Serial.printf("ok\n%s\n\n", fbdo.payload().c_str());
   else
     Serial.println(fbdo.errorReason());
-}
-
-bool readAppData(String appData) {
-  if (Firebase.ready() && signupOK) {
-    if (appData.equals("floodNotificationSent")) {
-      if (Firebase.RTDB.getInt(&fbdo, "app/floodNotificationSent")) {
-        if (fbdo.dataType() == "boolean") {
-          return fbdo.to<bool>();
-        }
-      }
-      else {
-        Serial.println(fbdo.errorReason());
-      }
-    }
-    else if (appData.equals("recoveredNotificationSent")) {
-      if (Firebase.RTDB.getInt(&fbdo, "app/recoveredNotificationSent")) {
-        if (fbdo.dataType() == "boolean") {
-          return fbdo.to<bool>();
-        }
-      }
-      else {
-        Serial.println(fbdo.errorReason());
-      }
-    }
-  }
 }
 
 void setup() {
@@ -345,11 +286,7 @@ void loop() {
 
   waterLevel = baseline - readFromUltrasonic();
 
-  if (waterLevel < 0) {
-    waterLevel = 0;
-  }
-
-  if (waterLevel < ACCURACY_OFFSET) {
+  if (waterLevel < 0 || waterLevel < ACCURACY_OFFSET) {
     waterLevel = 0;
   }
   
@@ -361,17 +298,10 @@ void loop() {
     floodNotification = true;
     playAlarm();
     sendEventData();
-    if (smsCount < 1) {
-      sendSMS();
-    }
+    sendSMS("flood");
   }
   else if (waterLevel != 0 && statusNormal == false) {
-    // check if notification was already sent
-    // if not, send it again
-    // bool floodNotificationSent = readAppData("floodNotificationSent");
-    // if (floodNotification && floodNotificationSent) {
-    //   floodNotification = false;
-    // }
+    floodNotification = false;
     playAlarm();
   }
   else if (waterLevel == 0 && statusNormal == false) {
@@ -379,15 +309,13 @@ void loop() {
     floodNotification = false;
     recoveredNotification = true;
     sendEventData();
+    sendSMS("recovered");
   }
   else {
     statusNormal = true;
     floodNotification = false;
     recoveredNotification = false;
-    // bool recoveredNotificationSent = readAppData("recoveredNotificationSent");
-    // if (recoveredNotification && recoveredNotificationSent) {
-    //   recoveredNotification = false;
-    // }
+    sendEventData();
   }
 
   signalLeds();
