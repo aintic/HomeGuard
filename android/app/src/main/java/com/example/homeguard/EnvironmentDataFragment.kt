@@ -65,12 +65,12 @@ class EnvironmentDataFragment : Fragment() {
                     humidGraph?.removeAllSeries()
 
                     val tempSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getTempDataPoints())
-                    tempSeries.setAnimated(true)
+//                    tempSeries.setAnimated(true)
                     tempSeries.color = Color.rgb(255, 87, 37)
                     tempGraph?.addSeries(tempSeries)
 
                     val humidSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getHumidityDataPoints())
-                    humidSeries.setAnimated(true)
+//                    humidSeries.setAnimated(true)
                     humidSeries.color = Color.rgb(57, 181, 236)
                     humidGraph?.addSeries(humidSeries)
                 }
