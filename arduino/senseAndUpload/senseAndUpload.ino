@@ -38,10 +38,10 @@ float temperatureC = 0;
 float temperatureF = 0;
 float humidity = 0;
 float waterLevel = 0;
-int smsCount = 0;
-boolean statusNormal = false;
+boolean statusNormal = true;
 boolean floodNotification = false;
 boolean recoveredNotification = false;
+boolean buzzerOff = false;
 bool signupOK = false;
 
 void signalLeds() {
@@ -197,15 +197,24 @@ void sendSMS(String smsType) {
     content.set("fields/body/stringValue", "Status Normal: Water no longer detected in basement!");
   }
   
-  String doc_path = "projects/";
-  doc_path += PROJECT_ID;
-  doc_path += ("/databases/(default)/documents/sms/" + String(smsCount));
-  
   Serial.print("Create a document... ");
   if (Firebase.Firestore.createDocument(&fbdo, PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.raw()))
     Serial.printf("ok\n%s\n\n", fbdo.payload().c_str());
   else
     Serial.println(fbdo.errorReason());
+}
+
+bool readAppCommand() {
+  if (Firebase.ready() && signupOK) {
+    if (Firebase.RTDB.getBool(&fbdo, "app/buzzerOff")) {
+      if (fbdo.dataType() == "boolean") {
+        return fbdo.to<bool>();
+      }
+      else {
+        Serial.println(fbdo.errorReason());
+      }
+    }
+  }
 }
 
 void setup() {
@@ -294,26 +303,24 @@ void loop() {
   if (waterLevel != 0 && statusNormal) {
     statusNormal = false;
     floodNotification = true;
-    playAlarm();
-    sendEventData();
-    if (smsCount <= 2) {
-      sendSMS("flood");
-      smsCount++;
+    if (buzzerOff == false) {
+      playAlarm();
     }
+    sendEventData();
+    sendSMS("flood");
   }
   else if (waterLevel != 0 && statusNormal == false) {
     floodNotification = false;
-    playAlarm();
+    if (buzzerOff == false) {
+      playAlarm();
+    }
   }
   else if (waterLevel == 0 && statusNormal == false) {
     statusNormal = true;
     floodNotification = false;
     recoveredNotification = true;
     sendEventData();
-    if (smsCount <= 2) {
-      sendSMS("recovered");
-      smsCount++;
-    }
+    sendSMS("recovered");
   }
   else {
     statusNormal = true;
