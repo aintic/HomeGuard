@@ -14,29 +14,42 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textSize="48sp"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.174"
+        app:layout_constraintHorizontal_bias="0.518"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.057"
-        tools:text="@string/water_level_default"/>
+        app:layout_constraintVertical_bias="0.3"
+        tools:text="@string/water_level_default" />
+
+    <TextView
+        android:id="@+id/water_level_label"
+        android:layout_width="117dp"
+        android:layout_height="16dp"
+        android:text="@string/water_level_label"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.232" />
 
     <TextView
         android:id="@+id/status_data"
-        android:layout_width="117dp"
+        android:layout_width="200dp"
         android:layout_height="60dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#4CAF50"
-        android:textSize="34sp"
+        android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.073"
+        app:layout_constraintVertical_bias="0.602"
         tools:text="@string/status_default" />
 
     <TextView
@@ -49,25 +62,10 @@
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.796"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
-
-    <TextView
-        android:id="@+id/water_level_label"
-        android:layout_width="72dp"
-        android:layout_height="16dp"
-        android:text="@string/water_level_label"
-        android:textAlignment="center"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintVertical_bias="0.525" />
 
     <Button
         android:id="@+id/button_second"

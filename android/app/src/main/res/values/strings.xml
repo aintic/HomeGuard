@@ -7,10 +7,10 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="temperature_label">Temperature</string>
-    <string name="humidity_label">Humidity</string>
+    <string name="temperature_label">Temperature (C)</string>
+    <string name="humidity_label">Humidity (%)</string>
     <string name="status_label">Status</string>
-    <string name="water_level_label">Water Level</string>
+    <string name="water_level_label">Water Level (cm)</string>
     <string name="temperature_default">0</string>
     <string name="humidity_default">0</string>
     <string name="status_default">Normal</string>
