@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,7 +20,6 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import java.math.RoundingMode
-import java.util.*
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -36,6 +34,8 @@ class EnvironmentDataFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private val envData: EnvironmentData
         get() = mainViewModel.envData
+    private val fahrenheitMode: Boolean
+        get() = mainViewModel.fahrenheitMode
 
     private val firebaseDB = FirebaseConnection("sensor")
     private val dataListener = object: ValueEventListener {
@@ -45,34 +45,41 @@ class EnvironmentDataFragment : Fragment() {
             val value = dataSnapshot.value
 
             if (value is Map<*, *>) {
-                val temperature: Double = (value["temperatureC"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
-                val humidity: Double = (value["humidity"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
-
-                Log.d(ContentValues.TAG, "Temperature: $temperature, Humidity: $humidity")
-
                 val tempView: TextView? = view?.findViewById(R.id.temperature_data)
                 val humidView: TextView? = view?.findViewById(R.id.humidity_data)
                 val tempGraph: GraphView? = view?.findViewById(R.id.temperatureGraph)
                 val humidGraph: GraphView? = view?.findViewById(R.id.humidityGraph)
 
-                if (tempView != null && humidView != null) {
-                    tempView.text = "$temperature"
-                    humidView.text = "$humidity"
+                val temperatureC = (value["temperatureC"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+                val temperatureF = (value["temperatureF"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
+                val humidity: Double = (value["humidity"].toString().toDouble()).toBigDecimal().setScale(2, RoundingMode.UP).toDouble()
 
-                    envData.addData(temperature, humidity)
+                Log.d(ContentValues.TAG, "Temperature: $temperatureC, Humidity: $humidity")
+
+                if (tempView != null && humidView != null) {
+
+                    envData.addData(temperatureC, temperatureF, humidity)
 
                     tempGraph?.removeAllSeries()
                     humidGraph?.removeAllSeries()
 
-                    val tempSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getTempDataPoints())
-//                    tempSeries.setAnimated(true)
-                    tempSeries.color = Color.rgb(255, 87, 37)
-                    tempGraph?.addSeries(tempSeries)
+                    humidView.text = "$humidity"
 
                     val humidSeries: LineGraphSeries<DataPoint> = LineGraphSeries(envData.getHumidityDataPoints())
-//                    humidSeries.setAnimated(true)
                     humidSeries.color = Color.rgb(57, 181, 236)
                     humidGraph?.addSeries(humidSeries)
+
+                    val tempSeries: LineGraphSeries<DataPoint>
+                    if (fahrenheitMode) {
+                        tempView.text = "$temperatureF"
+                        tempSeries = LineGraphSeries(envData.getTempFDataPoints())
+                    }
+                    else {
+                        tempView.text = "$temperatureC"
+                        tempSeries = LineGraphSeries(envData.getTempCDataPoints())
+                    }
+                    tempSeries.color = Color.rgb(255, 87, 37)
+                    tempGraph?.addSeries(tempSeries)
                 }
             }
         }

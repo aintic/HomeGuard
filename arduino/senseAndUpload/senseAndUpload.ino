@@ -21,29 +21,33 @@
 //Provide the RTDB payload printing info and other helper functions.
 #include "addons/RTDBHelper.h"
 
+// WifiManager object
 WiFiManager wifiManager;
-DHT dht(DHT_PIN, DHT_TYPE);
 
-//Define Firebase Data object
+// Firebase variables
 FirebaseData fbdo;
-
 FirebaseAuth auth;
 FirebaseConfig config;
+bool signupOK = false;
 
-unsigned long sendDataPrevMillis = 0;
+// DHT11 temp/humidity sensor object
+DHT dht(DHT_PIN, DHT_TYPE);
+
+// variables for sensor readings
 long duration = 0;
 float baseline = 0;
-
 float temperatureC = 0;
 float temperatureF = 0;
 float humidity = 0;
 float waterLevel = 0;
+
+// variables for device states 
 boolean statusNormal = true;
 boolean floodNotification = false;
 boolean recoveredNotification = false;
 boolean buzzerOff = false;
-bool signupOK = false;
 
+// method to light LEDs according to device states
 void signalLeds() {
   if (statusNormal) {
     digitalWrite(RED_PIN, LOW);
@@ -55,12 +59,14 @@ void signalLeds() {
   }
 }
 
+// method to play buzzer
 void playAlarm() {
   tone(BUZZER_PIN, NOTE_E3, 1000);
   delay(10);
   noTone(BUZZER_PIN);
 }
 
+// method to get water level reading from ultrasonic sensor
 float readFromUltrasonic() {
   // Clears the trigPin
   digitalWrite(SR04_TRIG_PIN, LOW);
@@ -75,128 +81,110 @@ float readFromUltrasonic() {
   return duration * SOUND_SPEED/2;
 }
 
-// The Firestore payload upload callback function
-void fcsUploadCallback(CFS_UploadStatusInfo info)
-{
-    if (info.status == firebase_cfs_upload_status_init)
-    {
-        Serial.printf("\nUploading data (%d)...\n", info.size);
-    }
-    else if (info.status == firebase_cfs_upload_status_upload)
-    {
-        Serial.printf("Uploaded %d%s\n", (int)info.progress, "%");
-    }
-    else if (info.status == firebase_cfs_upload_status_complete)
-    {
-        Serial.println("Upload completed ");
-    }
-    else if (info.status == firebase_cfs_upload_status_process_response)
-    {
-        Serial.print("Processing the response... ");
-    }
-    else if (info.status == firebase_cfs_upload_status_error)
-    {
-        Serial.printf("Upload failed, %s\n", info.errorMsg.c_str());
-    }
-}
-
+// method to send temperature, humidity, water level data to realtime database
 void sendSensorData() {
   if (Firebase.ready() && signupOK){  
-    // Write a Float number on the database path sensor
+    // Write temperature Celcius on the database path sensor
     if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureC", temperatureC)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
 
-    // Write a Float number on the database path sensor
+    // Write temperature Farenheit on the database path sensor
     if (Firebase.RTDB.setFloat(&fbdo, "sensor/temperatureF", temperatureF)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
 
-    // Write a Float number on the database path sensor
+    // Write humidity on the database path sensor
     if (Firebase.RTDB.setFloat(&fbdo, "sensor/humidity", humidity)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
 
-        // Write a Float number on the database path sensor
+        // Write water level on the database path sensor
     if (Firebase.RTDB.setFloat(&fbdo, "sensor/waterLevel", waterLevel)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
   }
 }
 
+// method to send device states to realtime database
 void sendEventData() {
   if (Firebase.ready() && signupOK) {
-    // Write a boolean on the database path event
+    // Write flood notification state on the database path event
     if (Firebase.RTDB.setBool(&fbdo, "event/floodNotification", floodNotification)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
 
-    // Write a boolean on the database path event
+    // Write recovered notification state on the database path event
     if (Firebase.RTDB.setBool(&fbdo, "event/recoveredNotification", recoveredNotification)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
 
-    // Write a boolean on the database path event
+    // Write normal notification state on the database path event
     if (Firebase.RTDB.setBool(&fbdo, "event/statusNormal", statusNormal)){
-      Serial.println("PASSED");
-      Serial.println("PATH: " + fbdo.dataPath());
+      Serial.print("PASSED. ");
+      Serial.print("PATH: " + fbdo.dataPath() + ",");
       Serial.println("TYPE: " + fbdo.dataType());
     }
     else {
-      Serial.println("FAILED");
+      Serial.print("FAILED. ");
       Serial.println("REASON: " + fbdo.errorReason());
     }
   }
 }
 
+// method to send document to Firestore for SMS alert
 void sendSMS(String smsType) {
   FirebaseJson content;
   String documentPath = "sms/";
+
+  // set phone number
   content.set("fields/to/stringValue", PHONE);
 
+  // set message body
   if (smsType.equals("flood")) {
-    content.set("fields/body/stringValue", "Status Alert: Water detected in basement! Water level is " + String(waterLevel) + ".");
+    content.set("fields/body/stringValue", "Status Alert: Water detected in basement! Water level is " + String(waterLevel) + ". Check app for current water level.");
   }
   else if (smsType.equals("recovered")) {
     content.set("fields/body/stringValue", "Status Normal: Water no longer detected in basement!");
   }
   
+  // send SMS message
   Serial.print("Create a document... ");
   if (Firebase.Firestore.createDocument(&fbdo, PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.raw()))
     Serial.printf("ok\n%s\n\n", fbdo.payload().c_str());
@@ -204,6 +192,7 @@ void sendSMS(String smsType) {
     Serial.println(fbdo.errorReason());
 }
 
+// method to read buzzer toggle state from realtime database
 bool readAppCommand() {
   if (Firebase.ready() && signupOK) {
     if (Firebase.RTDB.getBool(&fbdo, "app/buzzerOff")) {
@@ -219,6 +208,8 @@ bool readAppCommand() {
 
 void setup() {
   Serial.begin(115200); // Starts the serial communication
+
+  wifiManager.resetSettings();
 
   // setup password protected access point
   // go to 192.168.4.1 to setup wifi connection for device securely
@@ -241,6 +232,7 @@ void setup() {
   pinMode(DHT_PIN, INPUT);
   pinMode(SR04_TRIG_PIN, OUTPUT); // Sets the trigPin as an Output
 
+  // read the baseline distance for initial dry condition
   baseline = readFromUltrasonic();
   Serial.print("Baseline (cm): ");
   Serial.println(baseline);
@@ -271,19 +263,20 @@ void setup() {
   fbdo.setResponseSize(2048);
 
   Firebase.begin(&config, &auth);
-  Firebase.reconnectWiFi(true);
+  Firebase.reconnectNetwork(true);
 }
 
 void loop() {
   delay(2000);
 
   // Reading temperature or humidity takes about 250 milliseconds!
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
   humidity = dht.readHumidity();
   // Read temperature as Celsius (the default)
   temperatureC = dht.readTemperature();
   // Read temperature as Fahrenheit (isFahrenheit = true)
   temperatureF = dht.readTemperature(true);
+
+  Serial.println("Temp: " + String(temperatureC) + ", humidity: " + String(humidity));
 
   // Check if any reads failed and exit early (to try again).
   if (isnan(humidity) || isnan(temperatureC) || isnan(temperatureF)) {
@@ -291,44 +284,76 @@ void loop() {
     return;
   }
 
+  // read distance and get water level
   waterLevel = baseline - readFromUltrasonic();
 
-  if (waterLevel < 0 || waterLevel < ACCURACY_OFFSET) {
+  // handle negative values
+  if (waterLevel < 0) {
+    waterLevel = 0;
+  }
+
+  // handle sensor accuracy
+  if (waterLevel < ACCURACY_OFFSET)  {
     waterLevel = 0;
   }
   
   Serial.print("Water Level (cm): ");
   Serial.println(waterLevel);
 
+  // check if user toggled buzzer off
+  buzzerOff = readAppCommand();
+
+  // water detected - leak/flood
   if (waterLevel != 0 && statusNormal) {
+    // set device states
     statusNormal = false;
     floodNotification = true;
+
+    // play alarm if user toggle buzzer on
     if (buzzerOff == false) {
       playAlarm();
     }
+
+    // send sms alert
     sendEventData();
     sendSMS("flood");
   }
+
+  // water detected - ongoing leak/flood
   else if (waterLevel != 0 && statusNormal == false) {
+    // alert already sent 1st time
     floodNotification = false;
+
+    // continue playing alarm if user toggled buzzer on
     if (buzzerOff == false) {
       playAlarm();
     }
   }
+
+  // water not detected - leak/flood was addressed
   else if (waterLevel == 0 && statusNormal == false) {
+    // set device states
     statusNormal = true;
     floodNotification = false;
     recoveredNotification = true;
+
+    // send sms alert that things are back to normal
     sendEventData();
     sendSMS("recovered");
   }
+
+  // water not detected - no leak/flood at all
   else {
+    // set device states
     statusNormal = true;
     floodNotification = false;
     recoveredNotification = false;
     sendEventData();
   }
 
+  // set LED lights according to device states
   signalLeds();
+
+  // send all sensor data to Firebase
   sendSensorData();
 }

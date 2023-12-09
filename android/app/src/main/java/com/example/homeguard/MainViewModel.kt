@@ -8,12 +8,12 @@ class MainViewModel : ViewModel() {
     var envData: EnvironmentData = EnvironmentData()
     var floodData: FloodData = FloodData()
     var buzzerOff: Boolean = false
-
-    fun getBuzzerState(): Boolean {
-        return buzzerOff
-    }
+    var fahrenheitMode = false;
 
     fun toggleBuzzerState() {
         buzzerOff = !buzzerOff
+    }
+    fun toggleFahrenheitMode() {
+        fahrenheitMode = !fahrenheitMode
     }
 }
