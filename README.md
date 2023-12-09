@@ -12,7 +12,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/aintic/HomeGuard">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="resources/assets/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">HomeGuard</h3>
@@ -40,6 +40,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#system-design">System Design</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -64,10 +65,40 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-<!--[![Product Name Screen Shot][product-screenshot]](https://example.com)-->
+A smart flooding and water leak detection system with 2 components: an embedded device and an Android companion app.
+
+The embedded device features:
+* Flooding and water leak detection
+* Temperature and humidity data collection
+* SMS alerts when a flood or leak is detected
+* SMS alerts when a flood/leak is cleared
+* Wifi Manager provides a web portal for the device's WiFi configuration
+* Status LED lights (red - flood/leak event, green - normal)
+* Alarm buzzer alerting users within proximity
+
+The Android companion app features:
+* Real-time temperature/humidity data
+* Real-time graphs of temperature/humidity data
+* Real-time water level and flooding/leak status
+* Option to switch between Celsius/Fahrenheit mode
+* Option to mute/unmute device's buzzer
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+
+### System Design
+
+![System Design Diagram][system-diagram]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+### Android App Screenshots
+
+See [resources folder](https://github.com/aintic/HomeGuard/tree/main/resources/screenshots) for screenshots of the Android app.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Built With
@@ -171,7 +202,7 @@ Project Link: [https://github.com/aintic/HomeGuard](https://github.com/aintic/Ho
 [license-url]: https://github.com/aintic/HomeGuard/blob/main/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/alice-hna-nguyen
-[product-screenshot]: images/screenshot.png
+[system-diagram]: resources/HomeGuard_BlockDiagram.png
 [CPP]: https://img.shields.io/badge/C++-000000?style=for-the-badge&logo=Cplusplus&logoColor=white
 [CPP-url]: https://isocpp.org/
 [Kotlin]: https://img.shields.io/badge/Kotlin-563D7C?style=for-the-badge&logo=Kotlin&logoColor=white
