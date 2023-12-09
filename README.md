@@ -73,13 +73,13 @@ The embedded device features:
 * SMS alerts when a flood/leak is detected
 * SMS alerts when a flood/leak is cleared
 * Wifi Manager provides a web portal for the device's WiFi configuration
-* Status LED lights (red - flood/leak event, green - normal)
+* Status LEDs (red - flood/leak event, green - normal)
 * Alarm buzzer alerting users within proximity
 
 The Android companion app features:
 * Real-time temperature/humidity data
 * Real-time graphs of temperature/humidity data
-* Real-time water level and flooding/leak status
+* Real-time water level and flood/leak status
 * Option to switch between Celsius/Fahrenheit mode
 * Option to mute/unmute device's buzzer
 
