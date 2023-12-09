@@ -23,7 +23,7 @@
     <a href="https://github.com/aintic/HomeGuard"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/aintic/HomeGuard">View Demo</a>
+    <a href="https://youtu.be/HxDcWSPe0mw?si=nlwH7xezUtNWPvM4">View Demo</a>
     ·
     <a href="https://github.com/aintic/HomeGuard/issues">Report Bug</a>
     ·
@@ -70,7 +70,7 @@ A smart flooding and water leak detection system with 2 components: an embedded 
 The embedded device features:
 * Flooding and water leak detection
 * Temperature and humidity data collection
-* SMS alerts when a flood or leak is detected
+* SMS alerts when a flood/leak is detected
 * SMS alerts when a flood/leak is cleared
 * Wifi Manager provides a web portal for the device's WiFi configuration
 * Status LED lights (red - flood/leak event, green - normal)
