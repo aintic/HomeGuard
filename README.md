@@ -1,13 +1,5 @@
 <a name="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-<!--[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]-->
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -41,6 +33,8 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#system-design">System Design</a></li>
+        <li><a href="#video-demo">Video Demo</a></li>
+        <li><a href="#app-screenshots">App Screenshots</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -68,24 +62,20 @@
 A smart flooding and water leak detection system with 2 components: an embedded device and an Android companion app.
 
 The embedded device features:
-* Flooding and water leak detection
+* Flooding and water leak detection using ultrasonic sensor
 * Temperature and humidity data collection
-* SMS alerts when a flood/leak is detected
-* SMS alerts when a flood/leak is cleared
+* SMS alerts when a flood/leak is detected and when it is cleared
 * Wifi Manager provides a web portal for the device's WiFi configuration
 * Status LEDs (red - flood/leak event, green - normal)
 * Alarm buzzer alerting users within proximity
 
 The Android companion app features:
-* Real-time temperature/humidity data
-* Real-time graphs of temperature/humidity data
-* Real-time water level and flood/leak status
+* Real-time temperature, humidity, water level, flood/leak status
+* Real-time graphs of temperature and humidity data (updates if data changes)
 * Option to switch between Celsius/Fahrenheit mode
 * Option to mute/unmute device's buzzer
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### System Design
 
@@ -93,13 +83,17 @@ The Android companion app features:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Video Demo
 
-### Android App Screenshots
+[![Video Demo](https://img.youtube.com/vi/HxDcWSPe0mw/0.jpg)](https://www.youtube.com/watch?HxDcWSPe0mw "HomeGuard Demo")
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### App Screenshots
 
 See [resources folder](https://github.com/aintic/HomeGuard/tree/main/resources/screenshots) for screenshots of the Android app.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ### Built With
 
@@ -107,7 +101,6 @@ See [resources folder](https://github.com/aintic/HomeGuard/tree/main/resources/s
 * [![Kotlin][Kotlin]][Kotlin-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->
