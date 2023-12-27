@@ -85,7 +85,7 @@ The Android companion app features:
 
 ### Video Demo
 
-[![Video Demo](https://img.youtube.com/vi/HxDcWSPe0mw/0.jpg)](https://www.youtube.com/watch?HxDcWSPe0mw "HomeGuard Demo")
+[![Video Demo](https://img.youtube.com/vi/HxDcWSPe0mw/0.jpg)](https://www.youtube.com/watch?v=HxDcWSPe0mw "HomeGuard Demo")
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
